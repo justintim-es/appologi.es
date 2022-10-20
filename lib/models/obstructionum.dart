@@ -709,7 +709,7 @@ class Obstructionum {
         init.transactionId == output.item2 && init.index == output.item1));
     BigInt forumCap = BigInt.zero;
     for (TransactionOutput output in outputs.map((output) => output.item3)) {
-      forumCap += output.nof;
+      forumCap += output.app;
     }
     if (liber) {
       List<Obstructionum> obss = await getBlocks(directory);

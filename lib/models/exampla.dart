@@ -40,25 +40,25 @@ class SubmittereRationem extends Serializable {
 class SubmittereTransaction extends Serializable {
   String? from;
   String? to;
-  BigInt? nof;
+  BigInt? app;
 
   Map<String, dynamic> asMap() => {
         'from': from,
         'to': to,
-        'nof': nof,
+        'app': app,
       };
   // SubmittereTransaction(this.from, this.to, this.gla, this.unit);
   void readFromMap(Map<String, dynamic> map) {
     to = map['to'].toString();
     from = map['from'].toString();
-    nof = BigInt.from(num.parse(map['nof'].toStringAsExponential() as String));
+    app = BigInt.from(num.parse(map['app'].toStringAsExponential() as String));
   }
 
   APISchemaObject documentSchema(APIDocumentContext context) {
     return APISchemaObject.object({
       "to": APISchemaObject.string(),
       "from": APISchemaObject.string(),
-      "nof": APISchemaObject.number(),
+      "app": APISchemaObject.number(),
     });
   }
 }

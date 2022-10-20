@@ -25,17 +25,17 @@ class TransactionInput {
 
 class TransactionOutput {
   final String publicKey;
-  final BigInt nof;
+  final BigInt app;
   final int? cashExIndex;
-  TransactionOutput(this.publicKey, this.nof, this.cashExIndex);
+  TransactionOutput(this.publicKey, this.app, this.cashExIndex);
   Map<String, dynamic> toJson() => {
         'publicKey': publicKey,
-        'nof': nof.toString(),
+        'app': app.toString(),
         'cashExIndex': cashExIndex,
       }..removeWhere((key, value) => value == null);
   TransactionOutput.fromJson(Map<String, dynamic> jsoschon)
       : publicKey = jsoschon['publicKey'].toString(),
-        nof = BigInt.parse(jsoschon['nof'].toString()),
+        app = BigInt.parse(jsoschon['app'].toString()),
         cashExIndex = (jsoschon['cashExIndex'] != null &&
                 jsoschon['cashExIndex'] != 'null')
             ? int.parse(jsoschon['cashExIndex'].toString())
@@ -121,7 +121,7 @@ class Transaction {
     if (interioreTransaction.outputs.length != 1) {
       return false;
     }
-    if (interioreTransaction.outputs[0].nof !=
+    if (interioreTransaction.outputs[0].app !=
         Constantes.obstructionumPraemium) {
       return false;
     }
@@ -144,11 +144,11 @@ class Transaction {
               (liber) => liber.interioreTransaction.id == input.transactionId)
           .interioreTransaction
           .outputs[input.index];
-      spendable = output.nof;
+      spendable = output.app;
     }
     BigInt spended = BigInt.zero;
     for (TransactionOutput output in interioreTransaction.outputs) {
-      spended += output.nof;
+      spended += output.app;
     }
     if (spendable > spended) {
       return false;
@@ -175,11 +175,11 @@ class Transaction {
         print('non subscribere');
         return false;
       }
-      spendable += tx.interioreTransaction.outputs[input.index].nof;
+      spendable += tx.interioreTransaction.outputs[input.index].app;
     }
     BigInt spended = BigInt.zero;
     for (TransactionOutput output in interioreTransaction.outputs) {
-      spended += output.nof;
+      spended += output.app;
     }
     if (spendable != spended) {
       print('insf');
@@ -206,11 +206,11 @@ class Transaction {
           tx.interioreTransaction.outputs[input.index])) {
         return false;
       }
-      spendable += tx.interioreTransaction.outputs[input.index].nof;
+      spendable += tx.interioreTransaction.outputs[input.index].app;
     }
     BigInt spended = BigInt.zero;
     for (TransactionOutput output in interioreTransaction.outputs) {
-      spended += output.nof;
+      spended += output.app;
     }
     if (spendable != spended) {
       return false;

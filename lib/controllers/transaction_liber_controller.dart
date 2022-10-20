@@ -21,7 +21,7 @@ class TransactionLiberController extends ResourceController {
   Future<Response> submittereLiberTransaction(
       @Bind.body() SubmittereTransaction unCalcTx) async {
     try {
-      if (unCalcTx.nof == BigInt.zero) {
+      if (unCalcTx.app == BigInt.zero) {
         return Response.badRequest(body: {
           "code": 0,
           "message": "non potest mittere 0",
@@ -50,7 +50,7 @@ class TransactionLiberController extends ResourceController {
           true,
           true,
           unCalcTx.from!,
-          unCalcTx.nof!,
+          unCalcTx.app!,
           unCalcTx.to!,
           p2p.liberTxs,
           directory,
@@ -60,7 +60,7 @@ class TransactionLiberController extends ResourceController {
           true,
           false,
           unCalcTx.from!,
-          unCalcTx.nof!,
+          unCalcTx.app!,
           unCalcTx.to!,
           p2p.liberTxs,
           directory,

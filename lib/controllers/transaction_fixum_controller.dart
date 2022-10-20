@@ -20,7 +20,7 @@ class TransactionFixumController extends ResourceController {
   Future<Response> submittereFixumTransaction(
       @Bind.body() SubmittereTransaction unCalcTx) async {
     try {
-      if (unCalcTx.nof == BigInt.zero) {
+      if (unCalcTx.app == BigInt.zero) {
         return Response.badRequest(body: {
           "code": 0,
           "message": "non potest mittere 0",
@@ -38,7 +38,7 @@ class TransactionFixumController extends ResourceController {
           false,
           false,
           unCalcTx.from!,
-          unCalcTx.nof!,
+          unCalcTx.app!,
           unCalcTx.to!,
           p2p.fixumTxs,
           directory,
@@ -96,7 +96,7 @@ class TransactionFixumController extends ResourceController {
                 })),
                 'outputs': APISchemaObject.object({
                   'publicKey': APISchemaObject.string(),
-                  'gla': APISchemaObject.string()
+                  'app': APISchemaObject.string()
                 }),
                 'random': APISchemaObject.string(),
                 'id': APISchemaObject.integer(),

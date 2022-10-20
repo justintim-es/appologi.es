@@ -674,7 +674,7 @@ class P2P {
                             .interioreCashEx
                             .signumCashEx
                             .nof !=
-                        tx.interioreTransaction.outputs.first.nof) {
+                        tx.interioreTransaction.outputs.first.app) {
                       print('invalid cashex');
                       return;
                     }
@@ -726,7 +726,7 @@ class P2P {
                                 .interioreCashEx
                                 .signumCashEx
                                 .nof !=
-                            tx.interioreTransaction.outputs.first.nof) {
+                            tx.interioreTransaction.outputs.first.app) {
                           print('irritum cash ex');
                           return;
                         }
@@ -768,7 +768,7 @@ class P2P {
                       return;
                     } else {
                       transformAble +=
-                          tx.interioreTransaction.outputs[input.index].nof;
+                          tx.interioreTransaction.outputs[input.index].app;
                     }
                   }
                 }
@@ -777,7 +777,7 @@ class P2P {
                 for (List<TransactionOutput> outputs in transformOutputs
                     .map((tx) => tx.interioreTransaction.outputs)) {
                   for (TransactionOutput output in outputs) {
-                    transformed += output.nof;
+                    transformed += output.app;
                   }
                 }
                 if (transformAble != transformed) {

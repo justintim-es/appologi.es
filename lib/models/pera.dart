@@ -237,7 +237,7 @@ class Pera {
               BigInt prevValue =
                   maschap[oschoutoschout.publicKey] ?? BigInt.zero;
               maschap[oschoutoschout.publicKey] =
-                  prevValue + oschoutoschout.nof;
+                  prevValue + oschoutoschout.app;
             }
           }
         }
@@ -273,7 +273,7 @@ class Pera {
     List<TransactionOutput> outputs = [];
     List<TransactionInput> inputs = [];
     for (Tuple3<int, String, TransactionOutput> out in outs) {
-      outputs.add(TransactionOutput(publica, out.item3.nof, null));
+      outputs.add(TransactionOutput(publica, out.item3.app, null));
       inputs.add(TransactionInput(
           out.item1,
           Utils.signum(PrivateKey.fromHex(Pera.curve(), privatus), out.item3),
@@ -353,7 +353,7 @@ class Pera {
         init.transactionId == output.item2 && init.index == output.item1));
     BigInt forumCap = BigInt.zero;
     for (TransactionOutput output in outputs.map((output) => output.item3)) {
-      forumCap += output.nof;
+      forumCap += output.app;
     }
     return forumCap;
   }
@@ -364,7 +364,7 @@ class Pera {
         await inconsumptusOutputs(liber, publicKey, directory);
     BigInt balance = BigInt.zero;
     for (Tuple3<int, String, TransactionOutput> inOut in outputs) {
-      balance += inOut.item3.nof;
+      balance += inOut.item3.app;
     }
     return balance;
   }
@@ -420,7 +420,7 @@ class Pera {
       String? expressiId) {
     BigInt balance = BigInt.zero;
     for (Tuple3<int, String, TransactionOutput> inOut in outs) {
-      balance += inOut.item3.nof;
+      balance += inOut.item3.app;
     }
     print(balance);
     print(value);
@@ -435,13 +435,13 @@ class Pera {
     for (Tuple3<int, String, TransactionOutput> inOut in outs) {
       inputs.add(TransactionInput(
           inOut.item1, Utils.signum(privatus, inOut.item3), inOut.item2));
-      if (inOut.item3.nof < implere) {
-        outputs.add(TransactionOutput(to, inOut.item3.nof, null));
-        implere -= inOut.item3.nof;
-      } else if (inOut.item3.nof > implere) {
+      if (inOut.item3.app < implere) {
+        outputs.add(TransactionOutput(to, inOut.item3.app, null));
+        implere -= inOut.item3.app;
+      } else if (inOut.item3.app > implere) {
         outputs.add(TransactionOutput(to, implere, null));
         outputs.add(TransactionOutput(
-            privatus.publicKey.toHex(), inOut.item3.nof - implere, null));
+            privatus.publicKey.toHex(), inOut.item3.app - implere, null));
         break;
       } else {
         outputs.add(TransactionOutput(to, implere, null));
