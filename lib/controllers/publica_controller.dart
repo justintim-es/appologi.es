@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:conduit/conduit.dart';
-import 'package:nofiftyone/p2p.dart';
+import 'package:appologi_es/p2p.dart';
 
 class PublicaController extends ResourceController {
   Directory directory;
