@@ -1507,6 +1507,7 @@ class P2P {
                     .toJson()));
             print('sended block ${rop2pm.numerus}');
           }
+          sockets.addAll(rop2pm.thirdNodes);
         } else if (p2pm.type == 'probationem') {
           ProbationemP2PMessage ropp2pm = ProbationemP2PMessage.fromJson(
               json.decode(String.fromCharCodes(data).trim())
