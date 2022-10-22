@@ -1064,7 +1064,8 @@ class P2P {
                 }
                 op2pm.recieved.add('${client.address.address}:${client.port}');
                 List<String> to_send = sockets;
-                to_send.removeWhere((element) => op2pm.recieved.contains(element));
+                to_send
+                    .removeWhere((element) => op2pm.recieved.contains(element));
                 for (String socket in to_send) {
                   Socket soschock = await Socket.connect(
                       socket.split(':')[0], int.parse(socket.split(':')[1]));
@@ -1183,6 +1184,7 @@ class P2P {
                       //   print('sended block ${obst.interioreObstructionum.obstructionumNumerus}');
                       // }
                     }
+                    client.destroy();
                   }); //
                 }
                 // P2P.syncBlock(List<dynamic>.from([op2pm.obstructionum, sockets.length > 1 ? sockets.skip(sockets.indexOf('$from')).toList() : sockets, dir, '${client.address.address}:${client.port}']));
