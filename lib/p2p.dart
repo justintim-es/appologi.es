@@ -255,11 +255,13 @@ class ObstructionumP2PMessage extends P2PMessage {
 
 class RequestObstructionumP2PMessage extends P2PMessage {
   List<int> numerus;
+  List<String> thirdNodes;
   RequestObstructionumP2PMessage(
-      this.numerus, String type, List<String> recieved)
+      this.numerus, this.thirdNodes, String type, List<String> recieved)
       : super(type, recieved);
   RequestObstructionumP2PMessage.fromJson(Map<String, dynamic> jsoschon)
       : numerus = List<int>.from(jsoschon['numerus'] as List<dynamic>),
+        thirdNodes = List<String>.from(jsoschon['thirdNodes'] as List<dynamic>),
         super.fromJson(jsoschon);
   @override
   Map<String, dynamic> toJson() =>
@@ -603,6 +605,7 @@ class P2P {
             await op2pm.obstructionum.salvareIncipio(dir);
             client.write(json.encode(RequestObstructionumP2PMessage(
                 [1],
+                List<String>.from([]),
                 'request-obstructionum',
                 List<String>.from(
                     ['${client.address.address}:${client.port}'])).toJson()));
@@ -612,6 +615,7 @@ class P2P {
                   Generare.INCIPIO) {
             client.write(json.encode(RequestObstructionumP2PMessage(
                 [0],
+                List<String>.from([]),
                 'request-obstructionum',
                 List<String>.from(
                     ['${client.address.address}:${client.port}'])).toJson()));
@@ -1063,130 +1067,11 @@ class P2P {
                   confussusRp.sendPort.send("");
                 }
                 op2pm.recieved.add('${client.address.address}:${client.port}');
-                List<String> to_send = sockets;
-                to_send
-                    .removeWhere((element) => op2pm.recieved.contains(element));
-                for (String socket in to_send) {
-                  Socket soschock = await Socket.connect(
-                      socket.split(':')[0], int.parse(socket.split(':')[1]));
-                  soschock.write(json.encode(op2pm.toJson()));
-                  soschock.listen((data) async {
-                    // List<List<String>> lines = [];
-                    // for (int i = dir.listSync().length-1; i > -1 ; i--) {
-                    //   List<String> lines = await Utils.fileAmnis(File('${dir.path}/${Constantes.fileNomen}$i.txt')).toList();
-                    //   lines.addAll(lines);
-                    // }
-                    P2PMessage p2pm = P2PMessage.fromJson(
-                        json.decode(String.fromCharCodes(data).trim())
-                            as Map<String, dynamic>);
-                    if (p2pm.type == 'request-obstructionum') {
-                      RequestObstructionumP2PMessage rop2pm =
-                          RequestObstructionumP2PMessage.fromJson(
-                              json.decode(String.fromCharCodes(data).trim())
-                                  as Map<String, dynamic>);
-                      print('recieved request obstructionum ${rop2pm.numerus}');
-                      print(rop2pm.numerus.length);
-                      File caudices = File(
-                          '${dir.path}/${Constantes.fileNomen}${rop2pm.numerus.length - 1}.txt');
-
-                      // if (await Utils.fileAmnis(caudices).length > rop2pm.numerus.last) {
-                      if (rop2pm.numerus.last <=
-                          Constantes.maximeCaudicesFile) {
-                        String obs = await Utils.fileAmnis(caudices)
-                            .elementAt(rop2pm.numerus.last);
-                        Obstructionum obsObs = Obstructionum.fromJson(
-                            json.decode(obs) as Map<String, dynamic>);
-                        soschock.write(json.encode(ObstructionumP2PMessage(
-                                '', obsObs, 'obstructionum', sockets)
-                            .toJson()));
-                        print('sended block ${rop2pm.numerus}');
-                      } else {
-                        rop2pm.numerus.add(0);
-                        String obs = await Utils.fileAmnis(caudices)
-                            .elementAt(rop2pm.numerus.last);
-                        Obstructionum obsObs = Obstructionum.fromJson(
-                            json.decode(obs) as Map<String, dynamic>);
-                        soschock.write(json.encode(ObstructionumP2PMessage(
-                                '', obsObs, 'obstructionum', sockets)
-                            .toJson()));
-                        print('sended block ${rop2pm.numerus}');
-                      }
-                    } else if (p2pm.type == 'probationem') {
-                      ProbationemP2PMessage ropp2pm =
-                          ProbationemP2PMessage.fromJson(
-                              json.decode(String.fromCharCodes(data).trim())
-                                  as Map<String, dynamic>);
-                      print('recieved probationem ${ropp2pm.probationem}');
-                      //all you have todo is find out the difference in numbers of that array we speak of
-                      //
-                      // Obstructionum? obst = await Utils.accipereObstructionumPriorProbationem(ropp2pm.probationem, dir);
-                      // the prior obstructionum is our highest block and we wanna have the prior obstructionum of the nodes highest block
-                      // we have to compare arrays of blocknumbers and find out the difference
-                      // so we have this index and if it is thhis index we would like to increment the index
-                      // is it time for the difference
-                      // as soon as the difficulty is greater than one it still fails
-                      // we just grab a prior probationem untill we found it and then we should send it
-                      // we have more right so we will find the s
-                      Obstructionum priorObstructionumProbationem =
-                          await Utils.priorObstructionumProbationem(0, dir);
-                      // if the probationem euals the priorProbationem of the block we have to send
-                      //
-                      int index = 0;
-                      bool found = true;
-                      //when it doesnt find a match here it sends the incipio block of which the total difficulty isnt greater than-
-                      while (ropp2pm.probationem !=
-                          priorObstructionumProbationem
-                              .interioreObstructionum.priorProbationem) {
-                        // its kind a double
-                        // this is mroe ore like a obstructionum
-                        //maby this is enough
-                        // if it found the incipio we go one block back
-                        // it does remove for each block we press sync but this should be a loop to sync
-                        // so actually it should find the first efectus instead of the incipio and quit there
-                        if (priorObstructionumProbationem
-                                .interioreObstructionum.generare ==
-                            Generare.INCIPIO) {
-                          index--;
-                          priorObstructionumProbationem =
-                              await Utils.priorObstructionumProbationem(
-                                  index, dir);
-                          break;
-                        }
-                        priorObstructionumProbationem =
-                            await Utils.priorObstructionumProbationem(
-                                index, dir);
-                        print(priorObstructionumProbationem.toJson());
-                        index++;
-                      }
-                      // so that remove probationem was handy because we cant remove if the difficulty isnt greater than
-                      //so wif we send the incipio block the difficulty isnt greater so it does nothing
-                      // one of the solutions would be a different obstructionum listener to accept blocks with a lower difficulty
-                      // but the problem that occurs is that everyone can hit this endpoint and replace the chain
-                      // so you would need a certain proof too proof your total chain has a greater difficulty
-                      // so we need to invent a proof
-                      // how do we proof we have a greater difficulty without a greater difficulty
-                      // maby we dont need a proof like that because when it syncs it keeps on checking for a greater difficulty
-                      // once we sync the greater difficulty we can create a secret and resude that secret when we send a block with a lower difficulty
-                      // a different approach would be to delete so that total difficulty decreases too too messy
-                      soschock.write(json.encode(ObstructionumP2PMessage(
-                              ropp2pm.secret,
-                              priorObstructionumProbationem,
-                              'obstructionum',
-                              sockets)
-                          .toJson()));
-                      print(
-                          'sended ${priorObstructionumProbationem.interioreObstructionum.obstructionumNumerus}');
-                      // if (ropp2pm.probationem != priorObstructionum.interioreObstructionum.probationem) {
-                      //   soschock.write(json.encode(RequestProbationemP2PMessage(ropp2pm.index, 'request-probationem').toJson()));
-                      //   print('couldnt find block with probationem request previous probationem');
-                      // } else {
-                      //   soschock.write(json.encode(ObstructionumP2PMessage(priorObstructionum, hashes, 'obstructionum').toJson()));
-                      //   print('sended block ${obst.interioreObstructionum.obstructionumNumerus}');
-                      // }
-                    }
-                    client.destroy();
-                  }); //
-                }
+                // for (String socket in to_send) {
+                //   Socket soschock = await Socket.connect(
+                //       socket.split(':')[0], int.parse(socket.split(':')[1]));
+                //   soschock.write(json.encode(op2pm.toJson()));
+                // }
                 // P2P.syncBlock(List<dynamic>.from([op2pm.obstructionum, sockets.length > 1 ? sockets.skip(sockets.indexOf('$from')).toList() : sockets, dir, '${client.address.address}:${client.port}']));
                 // for (ReceivePort rp in efectusMiners) {
                 //
@@ -1199,9 +1084,12 @@ class P2P {
                 } else {
                   summaNumerus.add(0);
                 }
-
+                List<String> to_send = sockets;
+                to_send
+                    .removeWhere((element) => op2pm.recieved.contains(element));
                 client.write(json.encode(RequestObstructionumP2PMessage(
                         summaNumerus,
+                        to_send,
                         'request-obstructionum',
                         List<String>.from(
                             ['${client.address.address}:${client.port}']))
