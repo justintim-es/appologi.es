@@ -265,7 +265,7 @@ class RequestObstructionumP2PMessage extends P2PMessage {
         super.fromJson(jsoschon);
   @override
   Map<String, dynamic> toJson() =>
-      {'numerus': numerus, 'type': type, 'recieved': recieved};
+      {'numerus': numerus, 'type': type, 'recieved': recieved, 'thirdNodes': thirdNodes};
 }
 
 class ProbationemP2PMessage extends P2PMessage {
