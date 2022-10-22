@@ -1064,7 +1064,7 @@ class P2P {
                 }
                 op2pm.recieved.add('${client.address.address}:${client.port}');
                 List<String> to_send = sockets;
-                to_send.removeWhere((element) => sockets.contains(element));
+                to_send.removeWhere((element) => op2pm.recieved.contains(element));
                 for (String socket in to_send) {
                   Socket soschock = await Socket.connect(
                       socket.split(':')[0], int.parse(socket.split(':')[1]));
