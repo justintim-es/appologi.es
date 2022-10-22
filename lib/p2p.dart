@@ -253,6 +253,28 @@ class ObstructionumP2PMessage extends P2PMessage {
       };
 }
 
+class PrepareObstructionumSyncP2PMessage extends P2PMessage {
+  PrepareObstructionumSyncP2PMessage(String type, List<String> recieved)
+      : super(type, recieved);
+  PrepareObstructionumSyncP2PMessage.fromJson(Map<String, dynamic> jsoschon)
+      : super.fromJson(jsoschon);
+  @override
+  Map<String, dynamic> toJson() => {'type': type, 'recieved': 'recieved'};
+}
+
+class PrepareObstructionumAnswerP2PMessage extends P2PMessage {
+  List<String> sockets;
+  PrepareObstructionumAnswerP2PMessage(
+      this.sockets, String type, List<String> recieved)
+      : super(type, recieved);
+  PrepareObstructionumAnswerP2PMessage.fromJson(Map<String, dynamic> jsoschon)
+      : sockets = List<String>.from(jsoschon['sockets'] as List<dynamic>),
+        super.fromJson(jsoschon);
+  @override
+  Map<String, dynamic> toJson() =>
+      {'sockets': sockets, 'type': type, 'recieved': 'recieved'};
+}
+
 class RequestObstructionumP2PMessage extends P2PMessage {
   List<int> numerus;
   List<String> thirdNodes;
@@ -264,8 +286,12 @@ class RequestObstructionumP2PMessage extends P2PMessage {
         thirdNodes = List<String>.from(jsoschon['thirdNodes'] as List<dynamic>),
         super.fromJson(jsoschon);
   @override
-  Map<String, dynamic> toJson() =>
-      {'numerus': numerus, 'type': type, 'recieved': recieved, 'thirdNodes': thirdNodes};
+  Map<String, dynamic> toJson() => {
+        'numerus': numerus,
+        'type': type,
+        'recieved': recieved,
+        'thirdNodes': thirdNodes
+      };
 }
 
 class ProbationemP2PMessage extends P2PMessage {
@@ -593,6 +619,15 @@ class P2P {
                 socket.split(':')[0], int.parse(socket.split(':')[1]));
             soschock.write(json.encode(rtp2pm.toJson()));
           }
+          client.destroy();
+        } else if (msg.type == 'prepare-obstructionum-sync') {
+          PrepareObstructionumSyncP2PMessage posp2pm =
+              PrepareObstructionumSyncP2PMessage.fromJson(
+                  json.decode(data) as Map<String, dynamic>);
+          List<String> to_send = this.sockets;
+          to_send.removeWhere((element) => msg.recieved.contains(element));
+          client.write(PrepareObstructionumAnswerP2PMessage(
+              to_send, 'prepare-obstructionum-answer', []));
           client.destroy();
         } else if (msg.type == 'obstructionum') {
           ObstructionumP2PMessage op2pm = ObstructionumP2PMessage.fromJson(
@@ -1449,10 +1484,26 @@ class P2P {
     // if(obs.interioreObstructionum.generare == Generare.EFECTUS || obs.interioreObstructionum.generare == Generare.EXPRESSI) {
     //   expressieTxs = [];
     // }
+    List<String> allSockets = [];
+    allSockets.addAll(sockets);
     for (String socket in sockets) {
       Socket soschock = await Socket.connect(
           socket.split(':')[0], int.parse(socket.split(':')[1]));
       List<List<String>> hashes = [];
+      soschock.write(json.encode(PrepareObstructionumSyncP2PMessage(
+              'prepare-obstructionum-sync', sockets)
+          .toJson()));
+      soschock.listen((data) async {
+        PrepareObstructionumAnswerP2PMessage poap2pm =
+            PrepareObstructionumAnswerP2PMessage.fromJson(
+                json.decode(String.fromCharCodes(data).trim())
+                    as Map<String, dynamic>);
+        allSockets.addAll(poap2pm.sockets);
+      });
+    }
+    for (String socket in allSockets) {
+      Socket soschock = await Socket.connect(
+          socket.split(':')[0], int.parse(socket.split(':')[1]));
       // sockets.remove(socket)
       // for (int i = 0; i < dir.listSync().length; i++) {
       //   hashes.add([]);
