@@ -37,7 +37,7 @@ import 'package:appologi_es/controllers/cash_ex_controller.dart';
 ///
 /// Override methods in this class to set up routes and initialize services like
 /// database connections. See http://conduit.io/docs/http/channel/.
-class NofiftyoneChannel extends ApplicationChannel {
+class AppologiEsChannel extends ApplicationChannel {
   /// Initialize services in this method.
   ///
   /// Implement this method to initialize services, read values from [options]
