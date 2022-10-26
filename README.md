@@ -9,7 +9,7 @@ append the following line to `.bashrc` `export PATH="$PATH":"$HOME/.pub-cache/bi
 ### Step four
 clone the repository
 ### Step five
-adjust the config.yaml and append bootnode: 95.179.247.218:8989
+adjust the config.yaml and append bootnode: main.appologi.es
 ### Step six
 run `conduit build`
 ### Step seven
